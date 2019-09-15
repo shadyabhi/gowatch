@@ -120,12 +120,19 @@ func (o *outputs) printWordWise(c config) (ret string) {
 			}
 
 			ret += getHighlightedString(fmt.Sprintf("%s%s", strings.Repeat(" ", len(curOutputWord)-len(floatStr)), floatStr))
+			// Reset float finds for next iter
 			isFloatCur = false
 			isFloatPrev = false
 			continue
 		}
+
 		// String
-		ret += getHighlightedString(curOutputWord)
+		if o.i > 1 {
+			ret += getHighlightedString(curOutputWord)
+		} else {
+			// Don't highlight on first run
+			ret += curOutputWord
+		}
 	}
 	return
 }
