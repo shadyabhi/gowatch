@@ -95,6 +95,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 			fields{
 				prev: " foo  world",
 				cur:  " hello  world",
+				i:    10,
 			},
 			false,
 			" " + getHighlightedString("hello") + "  world",
@@ -104,6 +105,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 			fields{
 				prev: " foo 1 world",
 				cur:  " foo 2 world",
+				i:    10,
 			},
 			false,
 			" foo " + getHighlightedString("2") + " world",
@@ -113,6 +115,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 			fields{
 				prev: " foo 1 world",
 				cur:  " hello 2 world 3",
+				i:    10,
 			},
 			false,
 			" " + getHighlightedString("hello") + " " + getHighlightedString("2") + " world " + getHighlightedString("3"),
@@ -122,6 +125,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 			fields{
 				prev: "verylong 1 world",
 				cur:  "hey 1",
+				i:    10,
 			},
 			false,
 			getHighlightedString("hey") + " 1",
@@ -131,6 +135,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 			fields{
 				prev: "hello\nworld\t\t",
 				cur:  "foo\nworld",
+				i:    10,
 			},
 			false,
 			getHighlightedString("foo") + "\nworld",
@@ -140,6 +145,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 			fields{
 				prev: "hello 1",
 				cur:  "hello 10",
+				i:    10,
 			},
 			true,
 			"hello " + getHighlightedString(" 9"),
@@ -149,6 +155,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 			fields{
 				prev: "hello 10001",
 				cur:  "hello 10010",
+				i:    10,
 			},
 			true,
 			"hello " + getHighlightedString("    9"),
