@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -21,6 +22,18 @@ func (c *config) ParseConfig() error {
 	flag.BoolVar(&c.ShowOutputs, "o", false, "Show previous, current and diff outputs")
 	flag.BoolVar(&c.ShowRate, "r", false, "Show difference from previous output for int/floats")
 	flag.BoolVar(&c.WordBoundary, "w", false, "Parse wordwise, not charwise")
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), `gowatch is a tool like 'watch' but provides additional features like
+seeing difference from previous output for numeric words.
+
+Typical usage to see numberic diff would be: gowatch -r -w 'cmd'.
+
+-r: Enables calculation of numeric difference
+-w: To enable word-wise parsing for detecting numbers`+"\n\n")
+		fmt.Fprintf(flag.CommandLine.Output(), "Arguments:-\n\n")
+		flag.PrintDefaults()
+	}
 	flag.Parse()
 
 	c.Cmd = strings.Join(flag.Args(), " ")
