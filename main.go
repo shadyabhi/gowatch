@@ -22,21 +22,21 @@ func main() {
 // as argument
 func run(c config) (err error) {
 	ticker := time.NewTicker(time.Duration(c.Interval) * time.Second)
-	done := make(chan bool)
+	done := make(chan bool, 1)
 
 	var outs outputs
 	for {
 		select {
 		case <-done:
-			fmt.Println("Exiting...")
 			return
 
 		case <-ticker.C:
+			outs.i++
 			if c.Count > 0 && outs.i > c.Count {
+				ticker.Stop()
 				done <- true
 				return nil
 			}
-			outs.i++
 			outs.cur, err = getCMDOutput(c.Cmd)
 			if err != nil {
 				done <- true
