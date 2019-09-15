@@ -9,6 +9,19 @@ import (
 	tm "github.com/buger/goterm"
 )
 
+type outputs struct {
+	// Outputs current and previous
+	prev string
+	cur  string
+
+	// positions of interest
+	prevPos [][]int
+	curPos  [][]int
+
+	// Interation
+	i int
+}
+
 func watchSummary(c config, outs outputs) {
 	tm.Clear()
 	tm.MoveCursor(1, 1)

@@ -1,51 +1,25 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"log"
 	"os/exec"
-	"strings"
 	"time"
 )
 
-type config struct {
-	Interval     int64
-	Count        int
-	ShowOutputs  bool
-	WordBoundary bool
-	ShowRate     bool
-	Cmd          string
-}
-
-type outputs struct {
-	// Outputs current and previous
-	prev string
-	cur  string
-
-	// positions of interest
-	prevPos [][]int
-	curPos  [][]int
-
-	// Interation
-	i int
-}
-
 func main() {
-	// Flags
 	c := config{}
-	flag.Int64Var(&c.Interval, "d", 1, "Duration to repeat command again")
-	flag.IntVar(&c.Count, "c", 0, "Times till which to run the command")
-	flag.BoolVar(&c.ShowOutputs, "x", false, "Show current and previous outputs")
-	flag.BoolVar(&c.ShowRate, "r", false, "Show diff from previous output")
-	flag.BoolVar(&c.WordBoundary, "w", false, "Parse word wise")
-	flag.Parse()
+	if err := c.ParseConfig(); err != nil {
+		log.Fatalf("Error parsing command-line arguments: err: %s", err)
+	}
 
-	c.Cmd = strings.Join(flag.Args(), " ")
 	if err := run(c); err != nil {
 		fmt.Printf("Error running command, err: %s", err)
 	}
 }
 
+// run function executes the program with c config provided
+// as argument
 func run(c config) (err error) {
 	ticker := time.NewTicker(time.Duration(c.Interval) * time.Second)
 	done := make(chan bool)
