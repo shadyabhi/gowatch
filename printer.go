@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 	"regexp"
+	"strings"
 
 	tm "github.com/buger/goterm"
 )
@@ -20,15 +22,15 @@ func watchSummary(c config, outs outputs) {
 
 	// Decorated Out
 	if c.WordBoundary {
-		tm.Printf("%s\n\n", outs.printWordWise())
+		tm.Printf("%s\n\n", outs.printWordWise(c))
 	} else {
-		tm.Printf("%s\n\n", outs.printCharWise())
+		tm.Printf("%s\n\n", outs.printCharWise(c))
 	}
 	tm.Flush()
 }
 
 // Compares output char-wise
-func (o *outputs) printCharWise() (ret string) {
+func (o *outputs) printCharWise(c config) (ret string) {
 	// For now, I write the regex
 	r := regexp.MustCompile(`\d+`)
 
@@ -58,7 +60,7 @@ func (o *outputs) printCharWise() (ret string) {
 }
 
 // printWordWise compares output word-wise
-func (o *outputs) printWordWise() (ret string) {
+func (o *outputs) printWordWise(c config) (ret string) {
 	re := regexp.MustCompile(`\S+`)
 	prevWords := re.FindAllStringIndex(o.prev, -1)
 	curWords := re.FindAllStringIndex(o.cur, -1)
@@ -71,16 +73,45 @@ func (o *outputs) printWordWise() (ret string) {
 			ret += o.cur[0:w[0]]
 		}
 
+		var isFloatCur, isFloatPrev bool
+		var curFloat, prevFloat float64
+
 		curOutputWord := o.cur[w[0]:w[1]]
+		curFloat, isFloatCur = getFloat(curOutputWord)
 		// Prev output might be short
 		if i < len(prevWords) {
 			// Compare same Nth word
 			prevOutputWord := o.prev[prevWords[i][0]:prevWords[i][1]]
+			prevFloat, isFloatPrev = getFloat(prevOutputWord)
 			if reflect.DeepEqual(curOutputWord, prevOutputWord) {
 				ret += curOutputWord
+				isFloatCur = false
+				isFloatPrev = false
 				continue
 			}
 		} // Don't care if prev was longer
+		// We had a change
+
+		// Float?
+		if c.ShowRate &&
+			isFloatCur == true && isFloatPrev == true {
+
+			var floatStr string
+
+			diff := curFloat - prevFloat
+			isFloat := strings.Contains(curOutputWord, ".")
+			if isFloat {
+				floatStr = fmt.Sprintf("%.1f", diff)
+			} else {
+				floatStr = fmt.Sprintf("%.0f", diff)
+			}
+
+			ret += getHighlightedString(fmt.Sprintf("%s%s", strings.Repeat(" ", len(curOutputWord)-len(floatStr)), floatStr))
+			isFloatCur = false
+			isFloatPrev = false
+			continue
+		}
+		// String
 		ret += getHighlightedString(curOutputWord)
 	}
 	return
