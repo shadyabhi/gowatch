@@ -27,10 +27,8 @@ func (c *config) ParseConfig() error {
 		fmt.Fprintf(flag.CommandLine.Output(), `gowatch is a tool like 'watch' but provides additional features like
 seeing difference from previous output for numeric words.
 
-Typical usage to see numberic diff would be: gowatch -r -w 'cmd'.
-
--r: Enables calculation of numeric difference
--w: To enable word-wise parsing for detecting numbers`+"\n\n")
+Following command runs the command 'cmd' every second, forever and lists number difference
+insread of just the new string: gowatch -r 'cmd'`+"\n\n")
 		fmt.Fprintf(flag.CommandLine.Output(), "Arguments:-\n\n")
 		flag.PrintDefaults()
 	}
@@ -39,6 +37,9 @@ Typical usage to see numberic diff would be: gowatch -r -w 'cmd'.
 	c.Cmd = strings.Join(flag.Args(), " ")
 
 	// Everything akay?
+	if c.ShowRate {
+		c.WordBoundary = true
+	}
 	if len(c.Cmd) < 1 {
 		return fmt.Errorf("error: command to execute not provided")
 	}
