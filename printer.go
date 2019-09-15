@@ -64,25 +64,24 @@ func (o *outputs) printWordWise() (ret string) {
 	curWords := re.FindAllStringIndex(o.cur, -1)
 
 	for i, w := range curWords {
-		// Add non-word chars if needed
-		// var wsJump int
+		// Preserve whitespaces
 		if i > 0 {
-			// wsJump = w[0] - curWords[i-1][1]
 			ret += o.cur[curWords[i-1][1]:w[0]]
 		} else {
-			// wsJump = w[0]
 			ret += o.cur[0:w[0]]
 		}
 
-		// Prev output might be shorted
+		curOutputWord := o.cur[w[0]:w[1]]
+		// Prev output might be short
 		if i < len(prevWords) {
 			// Compare same Nth word
-			if reflect.DeepEqual(o.cur[w[0]:w[1]], o.prev[prevWords[i][0]:prevWords[i][1]]) {
-				ret += o.cur[w[0]:w[1]]
+			prevOutputWord := o.prev[prevWords[i][0]:prevWords[i][1]]
+			if reflect.DeepEqual(curOutputWord, prevOutputWord) {
+				ret += curOutputWord
 				continue
 			}
 		} // Don't care if prev was longer
-		ret += getHighlightedString(o.cur[w[0]:w[1]])
+		ret += getHighlightedString(curOutputWord)
 	}
 	return
 }
