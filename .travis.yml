@@ -1,0 +1,15 @@
+language: go
+
+install:
+    - go get github.com/buger/goterm
+
+go:
+  - 1.11
+  - 1.12
+  - tip
+
+script:
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
