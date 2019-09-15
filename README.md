@@ -35,15 +35,15 @@ Arguments:-
   -w    Parse wordwise, not charwise
 ```
 
-Gowatch (showing packets or bytes per second)
----------------------------------------------
+Gowatch
+-------
 
 `cat /proc/net/dev` only lists counters, but this command can help track difference.
 
 ![Gowatch command](https://shadyabhi.keybase.pub/gowatch_command.gif)
 
-Usual Watch command
--------------------
+Watch
+-----
 
 This can only highlight the difference, not super useful if you're tracking down rate of change.
 
