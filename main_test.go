@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"testing"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 func Test_getOutput(t *testing.T) {
@@ -37,63 +35,141 @@ func Test_getOutput(t *testing.T) {
 		})
 	}
 }
-
-func Test_decorate(t *testing.T) {
-	type args struct {
-		outs outputs
+func Test_outputs_printCharWise(t *testing.T) {
+	type fields struct {
+		prev    string
+		cur     string
+		prevPos [][]int
+		curPos  [][]int
+		i       int
 	}
 	tests := []struct {
 		name    string
-		args    args
+		fields  fields
 		wantRet string
 	}{
 		{
 			"simple line with no change",
-			args{
-				outputs{
-					prev: "hello",
-					cur:  "hello",
-				},
+			fields{
+				prev: "hello",
+				cur:  "hello",
 			},
 			"hello",
 		},
 		{
 			"simple line with one change",
-			args{
-				outputs{
-					prev: "hello 1",
-					cur:  "hello 2",
-				},
+			fields{
+				prev: "hello 1",
+				cur:  "hello 2",
 			},
 			fmt.Sprintf("hello %s", getHighlightedChar("2")),
 		},
 		{
 			"simple line with change (first one shorter)",
-			args{
-				outputs{
-					prev: "ab",
-					cur:  "cd ef",
-				},
+			fields{
+				prev: "ab",
+				cur:  "cd ef",
 			},
 			getHighlightedString("cd") + " ef",
 		},
 		{
 			"simple line with change (second one shorter)",
-			args{
-				outputs{
-					prev: "ab cd",
-					cur:  "xyz",
-				},
+			fields{
+				prev: "ab cd",
+				cur:  "xyz",
 			},
 			getHighlightedString("xyz"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotRet := decorate(tt.args.outs); gotRet != tt.wantRet {
-				spew.Dump(gotRet)
-				spew.Dump(tt.wantRet)
-				t.Errorf("decorate() = %v, want %v", gotRet, tt.wantRet)
+			o := &outputs{
+				prev:    tt.fields.prev,
+				cur:     tt.fields.cur,
+				prevPos: tt.fields.prevPos,
+				curPos:  tt.fields.curPos,
+				i:       tt.fields.i,
+			}
+			if gotRet := o.printCharWise(); gotRet != tt.wantRet {
+				t.Errorf("outputs.printWordWise() = %#v, want %#v", gotRet, tt.wantRet)
+			}
+		})
+	}
+}
+
+func Test_outputs_printWordWise(t *testing.T) {
+	type fields struct {
+		prev    string
+		cur     string
+		prevPos [][]int
+		curPos  [][]int
+		i       int
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		wantRet string
+	}{
+		{
+			"same line",
+			fields{
+				prev: " hello  world",
+				cur:  " hello  world",
+			},
+			" hello  world",
+		},
+		{
+			"difference in start",
+			fields{
+				prev: " foo  world",
+				cur:  " hello  world",
+			},
+			" " + getHighlightedString("hello") + "  world",
+		},
+		{
+			"difference in middle",
+			fields{
+				prev: " foo 1 world",
+				cur:  " foo 2 world",
+			},
+			" foo " + getHighlightedString("2") + " world",
+		},
+		{
+			"muliple difference in start, middle, end (final string long)",
+			fields{
+				prev: " foo 1 world",
+				cur:  " hello 2 world 3",
+			},
+			" " + getHighlightedString("hello") + " " + getHighlightedString("2") + " world " + getHighlightedString("3"),
+		},
+		{
+			"muliple difference in start, middle, end (final string short)",
+			fields{
+				prev: "verylong 1 world",
+				cur:  "hey 1",
+			},
+			getHighlightedString("hey") + " 1",
+		},
+		{
+			"simple with whitespaces",
+			fields{
+				prev: "hello\nworld\t\t",
+				cur:  "foo\nworld",
+			},
+			getHighlightedString("foo") + "\nworld",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			o := &outputs{
+				prev:    tt.fields.prev,
+				cur:     tt.fields.cur,
+				prevPos: tt.fields.prevPos,
+				curPos:  tt.fields.curPos,
+				i:       tt.fields.i,
+			}
+			if gotRet := o.printWordWise(); gotRet != tt.wantRet {
+				t.Errorf("outputs.printWordWise() = %#v, want %#v", gotRet, tt.wantRet)
 			}
 		})
 	}
