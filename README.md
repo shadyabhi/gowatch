@@ -3,9 +3,10 @@
 gowatch
 =======
 
-I built this tool while I was trying to analyze proc files in linux and trying to see things like packet drops per second via `cat /proc/net/dev`. `watch` command is great at highlighting differences but it doesn't help in easily checking the difference in packets between the previous and current run. This super small Golang program was created to fill that gap and is really useful to me. 
+I built this tool while I was trying to analyze proc files in linux and trying to see things like packet drops per second via `cat /proc/net/dev`. `watch` command is great at highlighting differences but it doesn't help in easily checking the difference in packets between the previous and current run. This super small Golang program was created to fill that gap and is really useful to me.
 
-## Usage
+Usage
+-----
 
 ```
 Usage of gowatch:
@@ -27,8 +28,16 @@ Arguments:-
   -w    Parse wordwise, not charwise
 ```
 
-## Gowatch (showing packets or bytes per second)
+Gowatch (showing packets or bytes per second)
+---------------------------------------------
+
+`cat /proc/net/dev` only lists counters, but this command can help track difference.
+
 ![Gowatch command](https://shadyabhi.keybase.pub/gowatch_command.gif)
 
-## Usual Watch command
+Usual Watch command
+-------------------
+
+This can only highlight the difference, not super useful if you're tracking down rate of change.
+
 ![Usual Watch command](https://shadyabhi.keybase.pub/watch_command.gif)
