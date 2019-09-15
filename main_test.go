@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test_getOutput(t *testing.T) {
+func Test_getCMDOutput(t *testing.T) {
 	type args struct {
 		cmd string
 	}
@@ -24,13 +24,13 @@ func Test_getOutput(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotOut, err := getOutput(tt.args.cmd)
+			gotOut, err := getCMDOutput(tt.args.cmd)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("getOutput() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("getCMDOutput() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if gotOut != tt.wantOut {
-				t.Errorf("getOutput() = %v, want %v", gotOut, tt.wantOut)
+				t.Errorf("getCMDOutput() = %v, want %v", gotOut, tt.wantOut)
 			}
 		})
 	}
