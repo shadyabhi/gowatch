@@ -42,20 +42,13 @@ func watchSummary(c config, outs outputs) {
 	tm.Flush()
 }
 
-// Compares output char-wise
+// printCharWise compares output char-wise
 func (o *outputs) printCharWise(c config) (ret string) {
-	// For now, I write the regex
-	r := regexp.MustCompile(`\d+`)
-
-	o.prevPos = r.FindAllStringIndex(o.prev, -1)
-	o.curPos = r.FindAllStringIndex(o.cur, -1)
-
 	prevLength := len(o.prev)
 
-	// var digitsFound int
 	for i := 0; i < len(o.cur); i++ {
 		if i < prevLength {
-			// If prev string was shorted,
+			// If prev string was short,
 			// nothing to compare
 			if o.cur[i] == o.prev[i] {
 				// As is.
