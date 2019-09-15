@@ -141,7 +141,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 			getHighlightedString("foo") + "\nworld",
 		},
 		{
-			"simple number print rate",
+			"simple int number print rate",
 			fields{
 				prev: "hello 1",
 				cur:  "hello 10",
@@ -149,6 +149,16 @@ func Test_outputs_printWordWise(t *testing.T) {
 			},
 			true,
 			"hello " + getHighlightedString(" 9"),
+		},
+		{
+			"simple float number print rate",
+			fields{
+				prev: "hello 1",
+				cur:  "hello 10.0",
+				i:    10,
+			},
+			true,
+			"hello " + getHighlightedString(" 9.0"),
 		},
 		{
 			"simple number print rate when space needed",
