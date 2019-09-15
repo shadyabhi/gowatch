@@ -91,6 +91,15 @@ func Test_outputs_printWordWise(t *testing.T) {
 			" hello  world",
 		},
 		{
+			"different line (no highlight on first run)",
+			fields{
+				prev: "",
+				cur:  " hello  world",
+			},
+			false,
+			" hello  world",
+		},
+		{
 			"difference in start",
 			fields{
 				prev: " foo  world",
