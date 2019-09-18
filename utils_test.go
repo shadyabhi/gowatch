@@ -14,6 +14,7 @@ func Test_getFloat(t *testing.T) {
 	}{
 		{"valid float", args{s: "1.0"}, 1.0, true},
 		{"invalid float", args{s: "foo"}, 0, false},
+		{"valid hex", args{s: "A"}, 10, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

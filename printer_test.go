@@ -179,6 +179,16 @@ func Test_outputs_printWordWise(t *testing.T) {
 			true,
 			"hello " + getHighlightedString("    9"),
 		},
+		{
+			"simple number print rate (hex)",
+			fields{
+				prev: "b84fe96e 00000000 00033a01 00000000",
+				cur:  "b84fe96e 00000000 00033a0f 00000000",
+				i:    10,
+			},
+			true,
+			"b84fe96e 00000000 " + getHighlightedString("      14") + " 00000000",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -189,6 +199,9 @@ func Test_outputs_printWordWise(t *testing.T) {
 				curPos:  tt.fields.curPos,
 				i:       tt.fields.i,
 			}
+			// if tt.name != "simple number print rate (hex)" {
+			// 	t.Skip()
+			// }
 			if gotRet := o.printWordWise(config{
 				ShowRate: tt.showRate,
 			}); gotRet != tt.wantRet {

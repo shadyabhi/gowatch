@@ -112,7 +112,12 @@ func (o *outputs) printWordWise(c config) (ret string) {
 				floatStr = fmt.Sprintf("%.0f", diff)
 			}
 
-			ret += getHighlightedString(fmt.Sprintf("%s%s", strings.Repeat(" ", len(curOutputWord)-len(floatStr)), floatStr))
+			nSpaces := len(curOutputWord) - len(floatStr)
+			if nSpaces > 0 {
+				ret += getHighlightedString(fmt.Sprintf("%s%s", strings.Repeat(" ", nSpaces), floatStr))
+			} else {
+				ret += getHighlightedString(fmt.Sprintf("%s", floatStr))
+			}
 			// Reset float finds for next iter
 			isFloatCur = false
 			isFloatPrev = false
