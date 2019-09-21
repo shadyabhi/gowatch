@@ -4,7 +4,8 @@ import "testing"
 
 func Test_getFloat(t *testing.T) {
 	type args struct {
-		s string
+		isHex bool
+		s     string
 	}
 	tests := []struct {
 		name   string
@@ -14,11 +15,12 @@ func Test_getFloat(t *testing.T) {
 	}{
 		{"valid float", args{s: "1.0"}, 1.0, true},
 		{"invalid float", args{s: "foo"}, 0, false},
-		{"valid hex", args{s: "A"}, 10, true},
+		{"valid hex (no 0x)", args{isHex: true, s: "A"}, 10, true},
+		{"valid hex (has 0x)", args{isHex: true, s: "0xA"}, 10, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotF, gotIs := getFloat(tt.args.s)
+			gotF, gotIs := getFloat(tt.args.isHex, tt.args.s)
 			if gotF != tt.wantF {
 				t.Errorf("isFloat() gotF = %v, want %v", gotF, tt.wantF)
 			}

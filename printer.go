@@ -83,12 +83,12 @@ func (o *outputs) printWordWise(c config) (ret string) {
 		var curFloat, prevFloat float64
 
 		curOutputWord := o.cur[w[0]:w[1]]
-		curFloat, isFloatCur = getFloat(curOutputWord)
+		curFloat, isFloatCur = getFloat(c.Hex, curOutputWord)
 		// Prev output might be short
 		if i < len(prevWords) {
 			// Compare same Nth word
 			prevOutputWord := o.prev[prevWords[i][0]:prevWords[i][1]]
-			prevFloat, isFloatPrev = getFloat(prevOutputWord)
+			prevFloat, isFloatPrev = getFloat(c.Hex, prevOutputWord)
 			if reflect.DeepEqual(curOutputWord, prevOutputWord) {
 				ret += curOutputWord
 				isFloatCur = false

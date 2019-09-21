@@ -76,10 +76,10 @@ func Test_outputs_printWordWise(t *testing.T) {
 		i       int
 	}
 	tests := []struct {
-		name     string
-		fields   fields
-		showRate bool
-		wantRet  string
+		name    string
+		fields  fields
+		cfg     config
+		wantRet string
 	}{
 		{
 			"same line",
@@ -87,7 +87,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				prev: " hello  world",
 				cur:  " hello  world",
 			},
-			false,
+			config{ShowRate: false},
 			" hello  world",
 		},
 		{
@@ -96,7 +96,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				prev: "",
 				cur:  " hello  world",
 			},
-			false,
+			config{ShowRate: false},
 			" hello  world",
 		},
 		{
@@ -106,7 +106,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  " hello  world",
 				i:    10,
 			},
-			false,
+			config{ShowRate: false},
 			" " + getHighlightedString("hello") + "  world",
 		},
 		{
@@ -116,7 +116,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  " foo 2 world",
 				i:    10,
 			},
-			false,
+			config{ShowRate: false},
 			" foo " + getHighlightedString("2") + " world",
 		},
 		{
@@ -126,7 +126,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  " hello 2 world 3",
 				i:    10,
 			},
-			false,
+			config{ShowRate: false},
 			" " + getHighlightedString("hello") + " " + getHighlightedString("2") + " world " + getHighlightedString("3"),
 		},
 		{
@@ -136,7 +136,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "hey 1",
 				i:    10,
 			},
-			false,
+			config{ShowRate: false},
 			getHighlightedString("hey") + " 1",
 		},
 		{
@@ -146,7 +146,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "foo\nworld",
 				i:    10,
 			},
-			false,
+			config{ShowRate: false},
 			getHighlightedString("foo") + "\nworld",
 		},
 		{
@@ -156,7 +156,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "hello 10",
 				i:    10,
 			},
-			true,
+			config{ShowRate: true},
 			"hello " + getHighlightedString(" 9"),
 		},
 		{
@@ -166,7 +166,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "hello 10.0",
 				i:    10,
 			},
-			true,
+			config{ShowRate: true},
 			"hello " + getHighlightedString(" 9.0"),
 		},
 		{
@@ -176,18 +176,18 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "hello 10010",
 				i:    10,
 			},
-			true,
+			config{ShowRate: true},
 			"hello " + getHighlightedString("    9"),
 		},
 		{
 			"simple number print rate (hex)",
 			fields{
-				prev: "b84fe96e 00000000 00033a01 00000000",
+				prev: "7529965d 00000000 00033a01 00000000",
 				cur:  "b84fe96e 00000000 00033a0f 00000000",
 				i:    10,
 			},
-			true,
-			"b84fe96e 00000000 " + getHighlightedString("      14") + " 00000000",
+			config{ShowRate: true, Hex: true},
+			getHighlightedString("1126585105") + " 00000000 " + getHighlightedString("      14") + " 00000000",
 		},
 	}
 	for _, tt := range tests {
@@ -199,12 +199,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				curPos:  tt.fields.curPos,
 				i:       tt.fields.i,
 			}
-			// if tt.name != "simple number print rate (hex)" {
-			// 	t.Skip()
-			// }
-			if gotRet := o.printWordWise(config{
-				ShowRate: tt.showRate,
-			}); gotRet != tt.wantRet {
+			if gotRet := o.printWordWise(tt.cfg); gotRet != tt.wantRet {
 				t.Errorf("outputs.printWordWise() = %#v, want %#v", gotRet, tt.wantRet)
 			}
 		})
