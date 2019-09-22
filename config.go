@@ -23,7 +23,7 @@ func (c *config) ParseConfig() error {
 	flag.BoolVar(&c.ShowOutputs, "o", false, "Show previous, current and diff outputs")
 	flag.BoolVar(&c.ShowRate, "r", false, "Show difference from previous output for int/floats")
 	flag.BoolVar(&c.WordBoundary, "w", false, "Parse wordwise, not charwise")
-	flag.BoolVar(&c.Hex, "b", false, "Interpret numbers as hex")
+	flag.BoolVar(&c.Hex, "x", false, "Interpret numbers as hex")
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n\n", os.Args[0])
 		fmt.Fprintf(flag.CommandLine.Output(), `gowatch is a tool like 'watch' but provides additional features like
