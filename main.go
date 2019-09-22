@@ -14,7 +14,7 @@ func main() {
 	}
 
 	if err := run(c); err != nil {
-		fmt.Printf("Error running command, err: %s", err)
+		fmt.Printf("Error running command, err: %s\n", err)
 	}
 }
 
