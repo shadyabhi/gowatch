@@ -1,5 +1,4 @@
 [![Actions Status](https://github.com/shadyabhi/gowatch/workflows/Go/badge.svg)](https://github.com/shadyabhi/gowatch/actions)
-[![Build Status](https://travis-ci.org/shadyabhi/gowatch.png)](https://travis-ci.org/shadyabhi/gowatch)
 [![codecov](https://codecov.io/gh/shadyabhi/gowatch/branch/master/graph/badge.svg)](https://codecov.io/gh/shadyabhi/gowatch)
 
 gowatch
