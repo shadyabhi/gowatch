@@ -5,11 +5,13 @@ import (
 	"log"
 	"os/exec"
 	"time"
+
+	"github.com/shadyabhi/gowatch/config"
 )
 
 func main() {
-	c := config{}
-	if err := c.ParseConfig(); err != nil {
+	c := config.Cfg{}
+	if err := c.Parse(); err != nil {
 		log.Fatalf("Error parsing command-line arguments: err: %s", err)
 	}
 
@@ -20,7 +22,7 @@ func main() {
 
 // run function executes the program with c config provided
 // as argument
-func run(c config) (err error) {
+func run(c config.Cfg) (err error) {
 	ticker := time.NewTicker(time.Duration(c.Interval) * time.Second)
 	done := make(chan bool, 1)
 

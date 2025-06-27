@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"testing"
+
+	"github.com/shadyabhi/gowatch/config"
 )
 
 func Test_outputs_printCharWise(t *testing.T) {
@@ -60,7 +62,7 @@ func Test_outputs_printCharWise(t *testing.T) {
 				curPos:  tt.fields.curPos,
 				i:       tt.fields.i,
 			}
-			if gotRet := o.printCharWise(config{}); gotRet != tt.wantRet {
+			if gotRet := o.printCharWise(config.Cfg{}); gotRet != tt.wantRet {
 				t.Errorf("outputs.printWordWise() = %#v, want %#v", gotRet, tt.wantRet)
 			}
 		})
@@ -78,7 +80,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 	tests := []struct {
 		name    string
 		fields  fields
-		cfg     config
+		cfg     config.Cfg
 		wantRet string
 	}{
 		{
@@ -87,7 +89,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				prev: " hello  world",
 				cur:  " hello  world",
 			},
-			config{ShowRate: false},
+			config.Cfg{ShowRate: false},
 			" hello  world",
 		},
 		{
@@ -96,7 +98,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				prev: "",
 				cur:  " hello  world",
 			},
-			config{ShowRate: false},
+			config.Cfg{ShowRate: false},
 			" hello  world",
 		},
 		{
@@ -106,7 +108,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  " hello  world",
 				i:    10,
 			},
-			config{ShowRate: false},
+			config.Cfg{ShowRate: false},
 			" " + getHighlightedString("hello") + "  world",
 		},
 		{
@@ -116,7 +118,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  " foo 2 world",
 				i:    10,
 			},
-			config{ShowRate: false},
+			config.Cfg{ShowRate: false},
 			" foo " + getHighlightedString("2") + " world",
 		},
 		{
@@ -126,7 +128,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  " hello 2 world 3",
 				i:    10,
 			},
-			config{ShowRate: false},
+			config.Cfg{ShowRate: false},
 			" " + getHighlightedString("hello") + " " + getHighlightedString("2") + " world " + getHighlightedString("3"),
 		},
 		{
@@ -136,7 +138,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "hey 1",
 				i:    10,
 			},
-			config{ShowRate: false},
+			config.Cfg{ShowRate: false},
 			getHighlightedString("hey") + " 1",
 		},
 		{
@@ -146,7 +148,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "foo\nworld",
 				i:    10,
 			},
-			config{ShowRate: false},
+			config.Cfg{ShowRate: false},
 			getHighlightedString("foo") + "\nworld",
 		},
 		{
@@ -156,7 +158,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "hello 10",
 				i:    10,
 			},
-			config{ShowRate: true},
+			config.Cfg{ShowRate: true},
 			"hello " + getHighlightedString(" 9"),
 		},
 		{
@@ -166,7 +168,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "hello 10.0",
 				i:    10,
 			},
-			config{ShowRate: true},
+			config.Cfg{ShowRate: true},
 			"hello " + getHighlightedString(" 9.0"),
 		},
 		{
@@ -176,7 +178,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "hello 10010",
 				i:    10,
 			},
-			config{ShowRate: true},
+			config.Cfg{ShowRate: true},
 			"hello " + getHighlightedString("    9"),
 		},
 		{
@@ -186,7 +188,7 @@ func Test_outputs_printWordWise(t *testing.T) {
 				cur:  "b84fe96e 00000000 00033a0f 00000000",
 				i:    10,
 			},
-			config{ShowRate: true, Hex: true},
+			config.Cfg{ShowRate: true, Hex: true},
 			getHighlightedString("1126585105") + " 00000000 " + getHighlightedString("      14") + " 00000000",
 		},
 	}

@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"flag"
@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-type config struct {
+type Cfg struct {
 	Interval     int64
 	Count        int
 	ShowOutputs  bool
@@ -17,7 +17,7 @@ type config struct {
 	Cmd          string
 }
 
-func (c *config) ParseConfig() error {
+func (c *Cfg) Parse() error {
 	flag.Int64Var(&c.Interval, "d", 1, "Repeat every 'd' seconds.")
 	flag.IntVar(&c.Count, "c", 0, "Stop after 'c' executions.")
 	flag.BoolVar(&c.ShowOutputs, "o", false, "Show previous, current and diff outputs")

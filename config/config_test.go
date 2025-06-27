@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"os"
@@ -6,7 +6,7 @@ import (
 )
 
 func Test_config_ParseConfig(t *testing.T) {
-	c := &config{}
+	c := &Cfg{}
 
 	oldArgs := os.Args
 	defer func() { os.Args = oldArgs }()
@@ -15,7 +15,7 @@ func Test_config_ParseConfig(t *testing.T) {
 		"-r",
 		"echo",
 	}
-	if err := c.ParseConfig(); err != nil {
+	if err := c.Parse(); err != nil {
 		t.Errorf("Unexpected error in parsing, err: %s", err)
 	}
 	if c.ShowRate != true {

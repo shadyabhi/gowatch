@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	tm "github.com/buger/goterm"
+	"github.com/shadyabhi/gowatch/config"
 )
 
 type outputs struct {
@@ -22,7 +23,7 @@ type outputs struct {
 	i int
 }
 
-func watchSummary(c config, outs outputs) {
+func watchSummary(c config.Cfg, outs outputs) {
 	tm.Clear()
 	tm.MoveCursor(1, 1)
 	tm.Printf("Every: %ds, Iteration: %d, Command: %s\n\n", c.Interval, outs.i, c.Cmd)
@@ -43,7 +44,7 @@ func watchSummary(c config, outs outputs) {
 }
 
 // printCharWise compares output char-wise
-func (o *outputs) printCharWise(c config) (ret string) {
+func (o *outputs) printCharWise(_ config.Cfg) (ret string) {
 	prevLength := len(o.prev)
 
 	for i := 0; i < len(o.cur); i++ {
@@ -66,7 +67,7 @@ func (o *outputs) printCharWise(c config) (ret string) {
 }
 
 // printWordWise compares output word-wise
-func (o *outputs) printWordWise(c config) (ret string) {
+func (o *outputs) printWordWise(c config.Cfg) (ret string) {
 	re := regexp.MustCompile(`\S+`)
 	prevWords := re.FindAllStringIndex(o.prev, -1)
 	curWords := re.FindAllStringIndex(o.cur, -1)
@@ -100,7 +101,7 @@ func (o *outputs) printWordWise(c config) (ret string) {
 
 		// Float?
 		if c.ShowRate &&
-			isFloatCur == true && isFloatPrev == true {
+			isFloatCur && isFloatPrev {
 
 			var floatStr string
 
@@ -116,7 +117,7 @@ func (o *outputs) printWordWise(c config) (ret string) {
 			if nSpaces > 0 {
 				ret += getHighlightedString(fmt.Sprintf("%s%s", strings.Repeat(" ", nSpaces), floatStr))
 			} else {
-				ret += getHighlightedString(fmt.Sprintf("%s", floatStr))
+				ret += getHighlightedString(floatStr)
 			}
 			// Reset float finds for next iter
 			isFloatCur = false
